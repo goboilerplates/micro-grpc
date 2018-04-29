@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.goboilerplates.microgrpc.proto";
+option java_outer_classname = "MicroGRPCProto";
+
+package proto;
+
+service GetSamples {
+    rpc All (CommonRequest) returns (GetSamplesReply){}
+    rpc AllByName (KeywordRequest) returns (GetSamplesReply){}
+}
+
+message CommonRequest {
+    string name = 1;
+    string timestamp = 2;
+}
+
+message KeywordRequest {
+    string keyword = 1;
+    string timestamp = 2;
+}
+
+message GetSamplesReply {
+    message Sample {
+        string name = 1;
+    }
+    repeated Sample samples = 1;
+}
