@@ -9,6 +9,7 @@
 ## Features
 - Unary, Server-side Streaming and Client-side Streaming RPCs API
 - Bidirectional Streaming RPC
+- Example of Go client
 - CI with Travis
 - Docker Build
 
@@ -48,8 +49,13 @@ bash script/coverage.sh
 
 Run main.go
 ``` bash
+
+# Server serves RPC at localhost:50052
 go run main.go
-# serve RPC at localhost:50052
+
+# Example of go client requests the server
+go run example/goclient/main_client.go
+
 ```
 
 Build and run native binary
