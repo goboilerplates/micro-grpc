@@ -35,7 +35,8 @@ message CommonRequest {
 
 message KeywordRequest {
     string keyword = 1;
-    string timestamp = 2;
+    string name = 2;
+    string timestamp = 3;
 }
 
 message GetSamplesReply {

@@ -26,7 +26,7 @@ func (api *GetSamplesAPI) All(ctx context.Context, commonRequest *proto.CommonRe
 
 // AllByName All gets all samples by name keyword via unary RPC.
 func (api *GetSamplesAPI) AllByName(ctx context.Context, keywordRequest *proto.KeywordRequest) (*proto.GetSamplesReply, error) {
-	fmt.Println(keywordRequest.Keyword, " with TimeStamp: ", keywordRequest.Timestamp)
+	fmt.Println(keywordRequest.Name, " keyword =", keywordRequest.Keyword, " with TimeStamp: ", keywordRequest.Timestamp)
 	result, err := api.Interactor.AllByName(keywordRequest.Keyword)
 	samples := util.ConvertCoreSampleArrayToReplySampleArray(result)
 	return &proto.GetSamplesReply{Samples: samples}, err
@@ -47,7 +47,7 @@ func (api *GetSamplesAPI) ServerStreamAll(commonRequest *proto.CommonRequest, st
 
 // ServerStreamAllByName gets all samples by name keyword via server-side stream RPC.
 func (api *GetSamplesAPI) ServerStreamAllByName(keywordRequest *proto.KeywordRequest, stream proto.GetSamples_ServerStreamAllByNameServer) error {
-	fmt.Println(keywordRequest.Keyword, " with TimeStamp: ", keywordRequest.Timestamp)
+	fmt.Println(keywordRequest.Name, " keyword =", keywordRequest.Keyword, " with TimeStamp: ", keywordRequest.Timestamp)
 	result, err := api.Interactor.AllByName(keywordRequest.Keyword)
 	if err != nil {
 		return err
@@ -60,40 +60,45 @@ func (api *GetSamplesAPI) ServerStreamAllByName(keywordRequest *proto.KeywordReq
 
 // ClientStreamAll gets all samples via client-side stream RPC.
 func (api *GetSamplesAPI) ClientStreamAll(stream proto.GetSamples_ClientStreamAllServer) error {
+	var samples []*proto.GetSamplesReply_Sample
+	count := 0
 	for {
 		commonRequest, err := stream.Recv()
 		if err == io.EOF {
-			fmt.Println(commonRequest.Name, " with TimeStamp: ", commonRequest.Timestamp)
-			result, err := api.Interactor.All()
-			samples := util.ConvertCoreSampleArrayToReplySampleArray(result)
-			err = stream.SendAndClose(&proto.GetSamplesReply{Samples: samples})
-			return err
+			return stream.SendAndClose(&proto.GetSamplesReply{Samples: samples})
 		}
 		if err != nil {
 			return err
 		}
+		count++
+		fmt.Println(commonRequest.Name, count, " with TimeStamp: ", commonRequest.Timestamp)
+		result, err := api.Interactor.All()
+		samples = util.ConvertCoreSampleArrayToReplySampleArray(result)
 	}
 }
 
 // ClientStreamAllByName gets all samples by name keyword via client-side stream RPC.
 func (api *GetSamplesAPI) ClientStreamAllByName(stream proto.GetSamples_ClientStreamAllByNameServer) error {
+	var samples []*proto.GetSamplesReply_Sample
+	count := 0
 	for {
 		keywordRequest, err := stream.Recv()
 		if err == io.EOF {
-			fmt.Println(keywordRequest.Keyword, " with TimeStamp: ", keywordRequest.Timestamp)
-			result, err := api.Interactor.AllByName(keywordRequest.Keyword)
-			samples := util.ConvertCoreSampleArrayToReplySampleArray(result)
-			err = stream.SendAndClose(&proto.GetSamplesReply{Samples: samples})
-			return err
+			return stream.SendAndClose(&proto.GetSamplesReply{Samples: samples})
 		}
 		if err != nil {
 			return err
 		}
+		count++
+		fmt.Println(keywordRequest.Name, count, " keyword =", keywordRequest.Keyword, " with TimeStamp: ", keywordRequest.Timestamp)
+		result, err := api.Interactor.AllByName(keywordRequest.Keyword)
+		samples = util.ConvertCoreSampleArrayToReplySampleArray(result)
 	}
 }
 
 // StreamAll gets all samples via bidirectional stream RPC.
 func (api *GetSamplesAPI) StreamAll(stream proto.GetSamples_StreamAllServer) error {
+	count := 0
 	for {
 		commonRequest, err := stream.Recv()
 		if err == io.EOF {
@@ -102,7 +107,8 @@ func (api *GetSamplesAPI) StreamAll(stream proto.GetSamples_StreamAllServer) err
 		if err != nil {
 			return err
 		}
-		fmt.Println(commonRequest.Name, " with TimeStamp: ", commonRequest.Timestamp)
+		count++
+		fmt.Println(commonRequest.Name, count, " with TimeStamp: ", commonRequest.Timestamp)
 		result, err := api.Interactor.All()
 		samples := util.ConvertCoreSampleArrayToReplySampleArray(result)
 		err = stream.Send(&proto.GetSamplesReply{Samples: samples})
@@ -111,6 +117,7 @@ func (api *GetSamplesAPI) StreamAll(stream proto.GetSamples_StreamAllServer) err
 
 // StreamAllByName gets all samples by name keyword via bidirectional stream RPC.
 func (api *GetSamplesAPI) StreamAllByName(stream proto.GetSamples_StreamAllByNameServer) error {
+	count := 0
 	for {
 		keywordRequest, err := stream.Recv()
 		if err == io.EOF {
@@ -119,7 +126,8 @@ func (api *GetSamplesAPI) StreamAllByName(stream proto.GetSamples_StreamAllByNam
 		if err != nil {
 			return err
 		}
-		fmt.Println(keywordRequest.Keyword, " with TimeStamp: ", keywordRequest.Timestamp)
+		count++
+		fmt.Println(keywordRequest.Name, count, " keyword =", keywordRequest.Keyword, " with TimeStamp: ", keywordRequest.Timestamp)
 		result, err := api.Interactor.AllByName(keywordRequest.Keyword)
 		samples := util.ConvertCoreSampleArrayToReplySampleArray(result)
 		stream.Send(&proto.GetSamplesReply{Samples: samples})
