@@ -32,11 +32,6 @@ dep ensure
 
 ## Running the tests
 
-Generate Go Protocol Buffers
-```
-protoc proto/main.proto --go_out=plugins=grpc:./
-```
-
 Run all tests
 
 ```
@@ -69,6 +64,12 @@ Build native binary for multiple platforms (darwin, windows and linux)
 ```
 bash script/BuildMulti.sh
 ```
+
+Generate Go Protocol Buffers
+```
+protoc proto/main.proto --go_out=plugins=grpc:./
+```
+
 ## Docker support 
 
 Build docker image
