@@ -1,14 +1,31 @@
 syntax = "proto3";
 
+// Java options
 option java_multiple_files = true;
 option java_package = "com.goboilerplates.microgrpc.proto";
 option java_outer_classname = "MicroGRPCProto";
 
+// C# options
+option csharp_namespace = "com.goboilerplates.microgrpc.proto";
+
 package proto;
 
 service GetSamples {
+    // Unary
     rpc All (CommonRequest) returns (GetSamplesReply){}
     rpc AllByName (KeywordRequest) returns (GetSamplesReply){}
+
+    // Server-side stream 
+    rpc ServerStreamAll (CommonRequest) returns (stream GetSamplesReply){}
+    rpc ServerStreamAllByName (KeywordRequest) returns (stream GetSamplesReply){}
+
+    // Client-side stream 
+    rpc ClientStreamAll (stream CommonRequest) returns (GetSamplesReply){}
+    rpc ClientStreamAllByName (stream KeywordRequest) returns (GetSamplesReply){}
+
+    // Bidirectional stream 
+    rpc StreamAll (stream CommonRequest) returns (stream GetSamplesReply){}
+    rpc StreamAllByName (stream KeywordRequest) returns (stream GetSamplesReply){}
 }
 
 message CommonRequest {

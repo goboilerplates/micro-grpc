@@ -132,8 +132,18 @@ const _ = grpc.SupportPackageIsVersion4
 // Client API for GetSamples service
 
 type GetSamplesClient interface {
+	// Unary
 	All(ctx context.Context, in *CommonRequest, opts ...grpc.CallOption) (*GetSamplesReply, error)
 	AllByName(ctx context.Context, in *KeywordRequest, opts ...grpc.CallOption) (*GetSamplesReply, error)
+	// Server-side stream
+	ServerStreamAll(ctx context.Context, in *CommonRequest, opts ...grpc.CallOption) (GetSamples_ServerStreamAllClient, error)
+	ServerStreamAllByName(ctx context.Context, in *KeywordRequest, opts ...grpc.CallOption) (GetSamples_ServerStreamAllByNameClient, error)
+	// Client-side stream
+	ClientStreamAll(ctx context.Context, opts ...grpc.CallOption) (GetSamples_ClientStreamAllClient, error)
+	ClientStreamAllByName(ctx context.Context, opts ...grpc.CallOption) (GetSamples_ClientStreamAllByNameClient, error)
+	// Bidirectional stream
+	StreamAll(ctx context.Context, opts ...grpc.CallOption) (GetSamples_StreamAllClient, error)
+	StreamAllByName(ctx context.Context, opts ...grpc.CallOption) (GetSamples_StreamAllByNameClient, error)
 }
 
 type getSamplesClient struct {
@@ -162,11 +172,215 @@ func (c *getSamplesClient) AllByName(ctx context.Context, in *KeywordRequest, op
 	return out, nil
 }
 
+func (c *getSamplesClient) ServerStreamAll(ctx context.Context, in *CommonRequest, opts ...grpc.CallOption) (GetSamples_ServerStreamAllClient, error) {
+	stream, err := grpc.NewClientStream(ctx, &_GetSamples_serviceDesc.Streams[0], c.cc, "/proto.GetSamples/ServerStreamAll", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &getSamplesServerStreamAllClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type GetSamples_ServerStreamAllClient interface {
+	Recv() (*GetSamplesReply, error)
+	grpc.ClientStream
+}
+
+type getSamplesServerStreamAllClient struct {
+	grpc.ClientStream
+}
+
+func (x *getSamplesServerStreamAllClient) Recv() (*GetSamplesReply, error) {
+	m := new(GetSamplesReply)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *getSamplesClient) ServerStreamAllByName(ctx context.Context, in *KeywordRequest, opts ...grpc.CallOption) (GetSamples_ServerStreamAllByNameClient, error) {
+	stream, err := grpc.NewClientStream(ctx, &_GetSamples_serviceDesc.Streams[1], c.cc, "/proto.GetSamples/ServerStreamAllByName", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &getSamplesServerStreamAllByNameClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type GetSamples_ServerStreamAllByNameClient interface {
+	Recv() (*GetSamplesReply, error)
+	grpc.ClientStream
+}
+
+type getSamplesServerStreamAllByNameClient struct {
+	grpc.ClientStream
+}
+
+func (x *getSamplesServerStreamAllByNameClient) Recv() (*GetSamplesReply, error) {
+	m := new(GetSamplesReply)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *getSamplesClient) ClientStreamAll(ctx context.Context, opts ...grpc.CallOption) (GetSamples_ClientStreamAllClient, error) {
+	stream, err := grpc.NewClientStream(ctx, &_GetSamples_serviceDesc.Streams[2], c.cc, "/proto.GetSamples/ClientStreamAll", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &getSamplesClientStreamAllClient{stream}
+	return x, nil
+}
+
+type GetSamples_ClientStreamAllClient interface {
+	Send(*CommonRequest) error
+	CloseAndRecv() (*GetSamplesReply, error)
+	grpc.ClientStream
+}
+
+type getSamplesClientStreamAllClient struct {
+	grpc.ClientStream
+}
+
+func (x *getSamplesClientStreamAllClient) Send(m *CommonRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *getSamplesClientStreamAllClient) CloseAndRecv() (*GetSamplesReply, error) {
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	m := new(GetSamplesReply)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *getSamplesClient) ClientStreamAllByName(ctx context.Context, opts ...grpc.CallOption) (GetSamples_ClientStreamAllByNameClient, error) {
+	stream, err := grpc.NewClientStream(ctx, &_GetSamples_serviceDesc.Streams[3], c.cc, "/proto.GetSamples/ClientStreamAllByName", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &getSamplesClientStreamAllByNameClient{stream}
+	return x, nil
+}
+
+type GetSamples_ClientStreamAllByNameClient interface {
+	Send(*KeywordRequest) error
+	CloseAndRecv() (*GetSamplesReply, error)
+	grpc.ClientStream
+}
+
+type getSamplesClientStreamAllByNameClient struct {
+	grpc.ClientStream
+}
+
+func (x *getSamplesClientStreamAllByNameClient) Send(m *KeywordRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *getSamplesClientStreamAllByNameClient) CloseAndRecv() (*GetSamplesReply, error) {
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	m := new(GetSamplesReply)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *getSamplesClient) StreamAll(ctx context.Context, opts ...grpc.CallOption) (GetSamples_StreamAllClient, error) {
+	stream, err := grpc.NewClientStream(ctx, &_GetSamples_serviceDesc.Streams[4], c.cc, "/proto.GetSamples/StreamAll", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &getSamplesStreamAllClient{stream}
+	return x, nil
+}
+
+type GetSamples_StreamAllClient interface {
+	Send(*CommonRequest) error
+	Recv() (*GetSamplesReply, error)
+	grpc.ClientStream
+}
+
+type getSamplesStreamAllClient struct {
+	grpc.ClientStream
+}
+
+func (x *getSamplesStreamAllClient) Send(m *CommonRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *getSamplesStreamAllClient) Recv() (*GetSamplesReply, error) {
+	m := new(GetSamplesReply)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *getSamplesClient) StreamAllByName(ctx context.Context, opts ...grpc.CallOption) (GetSamples_StreamAllByNameClient, error) {
+	stream, err := grpc.NewClientStream(ctx, &_GetSamples_serviceDesc.Streams[5], c.cc, "/proto.GetSamples/StreamAllByName", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &getSamplesStreamAllByNameClient{stream}
+	return x, nil
+}
+
+type GetSamples_StreamAllByNameClient interface {
+	Send(*KeywordRequest) error
+	Recv() (*GetSamplesReply, error)
+	grpc.ClientStream
+}
+
+type getSamplesStreamAllByNameClient struct {
+	grpc.ClientStream
+}
+
+func (x *getSamplesStreamAllByNameClient) Send(m *KeywordRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *getSamplesStreamAllByNameClient) Recv() (*GetSamplesReply, error) {
+	m := new(GetSamplesReply)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // Server API for GetSamples service
 
 type GetSamplesServer interface {
+	// Unary
 	All(context.Context, *CommonRequest) (*GetSamplesReply, error)
 	AllByName(context.Context, *KeywordRequest) (*GetSamplesReply, error)
+	// Server-side stream
+	ServerStreamAll(*CommonRequest, GetSamples_ServerStreamAllServer) error
+	ServerStreamAllByName(*KeywordRequest, GetSamples_ServerStreamAllByNameServer) error
+	// Client-side stream
+	ClientStreamAll(GetSamples_ClientStreamAllServer) error
+	ClientStreamAllByName(GetSamples_ClientStreamAllByNameServer) error
+	// Bidirectional stream
+	StreamAll(GetSamples_StreamAllServer) error
+	StreamAllByName(GetSamples_StreamAllByNameServer) error
 }
 
 func RegisterGetSamplesServer(s *grpc.Server, srv GetSamplesServer) {
@@ -209,6 +423,152 @@ func _GetSamples_AllByName_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _GetSamples_ServerStreamAll_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(CommonRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(GetSamplesServer).ServerStreamAll(m, &getSamplesServerStreamAllServer{stream})
+}
+
+type GetSamples_ServerStreamAllServer interface {
+	Send(*GetSamplesReply) error
+	grpc.ServerStream
+}
+
+type getSamplesServerStreamAllServer struct {
+	grpc.ServerStream
+}
+
+func (x *getSamplesServerStreamAllServer) Send(m *GetSamplesReply) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func _GetSamples_ServerStreamAllByName_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(KeywordRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(GetSamplesServer).ServerStreamAllByName(m, &getSamplesServerStreamAllByNameServer{stream})
+}
+
+type GetSamples_ServerStreamAllByNameServer interface {
+	Send(*GetSamplesReply) error
+	grpc.ServerStream
+}
+
+type getSamplesServerStreamAllByNameServer struct {
+	grpc.ServerStream
+}
+
+func (x *getSamplesServerStreamAllByNameServer) Send(m *GetSamplesReply) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func _GetSamples_ClientStreamAll_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(GetSamplesServer).ClientStreamAll(&getSamplesClientStreamAllServer{stream})
+}
+
+type GetSamples_ClientStreamAllServer interface {
+	SendAndClose(*GetSamplesReply) error
+	Recv() (*CommonRequest, error)
+	grpc.ServerStream
+}
+
+type getSamplesClientStreamAllServer struct {
+	grpc.ServerStream
+}
+
+func (x *getSamplesClientStreamAllServer) SendAndClose(m *GetSamplesReply) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *getSamplesClientStreamAllServer) Recv() (*CommonRequest, error) {
+	m := new(CommonRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func _GetSamples_ClientStreamAllByName_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(GetSamplesServer).ClientStreamAllByName(&getSamplesClientStreamAllByNameServer{stream})
+}
+
+type GetSamples_ClientStreamAllByNameServer interface {
+	SendAndClose(*GetSamplesReply) error
+	Recv() (*KeywordRequest, error)
+	grpc.ServerStream
+}
+
+type getSamplesClientStreamAllByNameServer struct {
+	grpc.ServerStream
+}
+
+func (x *getSamplesClientStreamAllByNameServer) SendAndClose(m *GetSamplesReply) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *getSamplesClientStreamAllByNameServer) Recv() (*KeywordRequest, error) {
+	m := new(KeywordRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func _GetSamples_StreamAll_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(GetSamplesServer).StreamAll(&getSamplesStreamAllServer{stream})
+}
+
+type GetSamples_StreamAllServer interface {
+	Send(*GetSamplesReply) error
+	Recv() (*CommonRequest, error)
+	grpc.ServerStream
+}
+
+type getSamplesStreamAllServer struct {
+	grpc.ServerStream
+}
+
+func (x *getSamplesStreamAllServer) Send(m *GetSamplesReply) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *getSamplesStreamAllServer) Recv() (*CommonRequest, error) {
+	m := new(CommonRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func _GetSamples_StreamAllByName_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(GetSamplesServer).StreamAllByName(&getSamplesStreamAllByNameServer{stream})
+}
+
+type GetSamples_StreamAllByNameServer interface {
+	Send(*GetSamplesReply) error
+	Recv() (*KeywordRequest, error)
+	grpc.ServerStream
+}
+
+type getSamplesStreamAllByNameServer struct {
+	grpc.ServerStream
+}
+
+func (x *getSamplesStreamAllByNameServer) Send(m *GetSamplesReply) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *getSamplesStreamAllByNameServer) Recv() (*KeywordRequest, error) {
+	m := new(KeywordRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 var _GetSamples_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "proto.GetSamples",
 	HandlerType: (*GetSamplesServer)(nil),
@@ -222,29 +582,66 @@ var _GetSamples_serviceDesc = grpc.ServiceDesc{
 			Handler:    _GetSamples_AllByName_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "ServerStreamAll",
+			Handler:       _GetSamples_ServerStreamAll_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "ServerStreamAllByName",
+			Handler:       _GetSamples_ServerStreamAllByName_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "ClientStreamAll",
+			Handler:       _GetSamples_ClientStreamAll_Handler,
+			ClientStreams: true,
+		},
+		{
+			StreamName:    "ClientStreamAllByName",
+			Handler:       _GetSamples_ClientStreamAllByName_Handler,
+			ClientStreams: true,
+		},
+		{
+			StreamName:    "StreamAll",
+			Handler:       _GetSamples_StreamAll_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+		{
+			StreamName:    "StreamAllByName",
+			Handler:       _GetSamples_StreamAllByName_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+	},
 	Metadata: "proto/main.proto",
 }
 
 func init() { proto1.RegisterFile("proto/main.proto", fileDescriptor0) }
 
 var fileDescriptor0 = []byte{
-	// 269 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x84, 0x90, 0xc1, 0x4b, 0xc3, 0x30,
-	0x14, 0xc6, 0xad, 0xd3, 0x8d, 0x3d, 0x71, 0x4a, 0x50, 0x29, 0x63, 0xc2, 0xe8, 0x69, 0xa7, 0x08,
-	0x13, 0xf5, 0xe2, 0xa5, 0xdd, 0x61, 0x82, 0x28, 0x25, 0xfe, 0x05, 0x59, 0x7d, 0xcc, 0x62, 0xd2,
-	0xc4, 0x24, 0x22, 0x3d, 0xfa, 0x9f, 0x4b, 0x93, 0x96, 0x31, 0x99, 0x78, 0xca, 0xfb, 0xbe, 0xf7,
-	0xde, 0x2f, 0xc9, 0x07, 0xa7, 0xda, 0x28, 0xa7, 0xae, 0x24, 0x2f, 0x2b, 0xea, 0x4b, 0x72, 0xe8,
-	0x8f, 0x24, 0x85, 0xe3, 0x85, 0x92, 0x52, 0x55, 0x0c, 0x3f, 0x3e, 0xd1, 0x3a, 0x42, 0xe0, 0xa0,
-	0xe2, 0x12, 0xe3, 0x68, 0x1a, 0xcd, 0x86, 0xcc, 0xd7, 0x64, 0x02, 0x43, 0x57, 0x4a, 0xb4, 0x8e,
-	0x4b, 0x1d, 0xef, 0xfb, 0xc6, 0xc6, 0x48, 0x1e, 0x60, 0xf4, 0x88, 0xf5, 0x97, 0x32, 0xaf, 0x1d,
-	0x23, 0x86, 0xc1, 0x7b, 0x70, 0x5a, 0x4c, 0x27, 0xff, 0x21, 0xbd, 0xc1, 0xc9, 0x12, 0xdd, 0x0b,
-	0x97, 0x5a, 0xa0, 0x65, 0xa8, 0x45, 0x4d, 0xee, 0x60, 0x60, 0x83, 0x8e, 0xa3, 0x69, 0x6f, 0x76,
-	0x34, 0xbf, 0x0c, 0xef, 0xa7, 0xbf, 0x06, 0x69, 0x10, 0xac, 0x9b, 0x1e, 0x4f, 0xa0, 0x1f, 0xac,
-	0x5d, 0x3f, 0x9a, 0x7f, 0x47, 0x00, 0x1b, 0x02, 0xb9, 0x81, 0x5e, 0x2a, 0x04, 0x39, 0x6b, 0xd9,
-	0x5b, 0x89, 0x8c, 0x2f, 0x76, 0xdf, 0x98, 0xec, 0x91, 0x7b, 0x18, 0xa6, 0x42, 0x64, 0xf5, 0x73,
-	0x13, 0xd2, 0x79, 0x3b, 0xb6, 0x9d, 0xc5, 0xdf, 0xdb, 0xd9, 0x2d, 0x24, 0x85, 0x92, 0x74, 0xad,
-	0x56, 0xaa, 0x14, 0x68, 0xb4, 0xe0, 0x0e, 0x2d, 0x95, 0x65, 0x61, 0xd4, 0xda, 0xe8, 0x22, 0xec,
-	0x65, 0xa3, 0xa7, 0xc6, 0x58, 0xb2, 0x7c, 0x91, 0x37, 0x3a, 0x8f, 0x56, 0x7d, 0xdf, 0xb8, 0xfe,
-	0x09, 0x00, 0x00, 0xff, 0xff, 0xc5, 0x6d, 0xbb, 0x48, 0xd4, 0x01, 0x00, 0x00,
+	// 332 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x90, 0x41, 0x4b, 0xc3, 0x40,
+	0x10, 0x85, 0xdd, 0xb6, 0xb6, 0x64, 0xc4, 0x56, 0x16, 0x2b, 0xa1, 0x54, 0x28, 0x39, 0xe5, 0x14,
+	0x43, 0x45, 0xbc, 0x08, 0xd2, 0x06, 0xac, 0x28, 0x4a, 0x49, 0x8f, 0x9e, 0xd2, 0x3a, 0xd4, 0xe0,
+	0x6e, 0x36, 0x6e, 0x56, 0xa5, 0x7f, 0x49, 0xfc, 0x91, 0x92, 0xdd, 0x96, 0xd2, 0x50, 0x54, 0xd2,
+	0xd3, 0xcc, 0x7b, 0x99, 0x79, 0xf9, 0x76, 0xe0, 0x28, 0x95, 0x42, 0x89, 0x33, 0x1e, 0xc5, 0x89,
+	0xa7, 0x5b, 0xba, 0xaf, 0x8b, 0x33, 0x80, 0xc3, 0x40, 0x70, 0x2e, 0x92, 0x10, 0xdf, 0xde, 0x31,
+	0x53, 0x94, 0x42, 0x2d, 0x89, 0x38, 0xda, 0xa4, 0x47, 0x5c, 0x2b, 0xd4, 0x3d, 0xed, 0x82, 0xa5,
+	0x62, 0x8e, 0x99, 0x8a, 0x78, 0x6a, 0x57, 0xf4, 0x87, 0xb5, 0xe1, 0xdc, 0x42, 0xf3, 0x1e, 0x17,
+	0x9f, 0x42, 0x3e, 0xaf, 0x32, 0x6c, 0x68, 0xbc, 0x1a, 0x67, 0x19, 0xb3, 0x92, 0x7f, 0x24, 0xbd,
+	0x40, 0x6b, 0x84, 0x6a, 0x12, 0xf1, 0x94, 0x61, 0x16, 0x62, 0xca, 0x16, 0xf4, 0x12, 0x1a, 0x99,
+	0xd1, 0x36, 0xe9, 0x55, 0xdd, 0x83, 0xfe, 0xa9, 0xe1, 0xf7, 0x0a, 0x83, 0x9e, 0x11, 0xe1, 0x6a,
+	0xba, 0xd3, 0x85, 0xba, 0xb1, 0xb6, 0xbd, 0xa8, 0xff, 0x5d, 0x03, 0x58, 0x27, 0xd0, 0x0b, 0xa8,
+	0x0e, 0x18, 0xa3, 0xc7, 0xcb, 0xec, 0x8d, 0x8b, 0x74, 0x4e, 0xb6, 0xff, 0xd1, 0xd9, 0xa3, 0x57,
+	0x60, 0x0d, 0x18, 0x1b, 0x2e, 0x1e, 0xf3, 0x23, 0xb5, 0x97, 0x63, 0x9b, 0xb7, 0xf8, 0x65, 0x3b,
+	0x80, 0xd6, 0x04, 0xe5, 0x07, 0xca, 0x89, 0x92, 0x18, 0xf1, 0x12, 0x00, 0x3e, 0xa1, 0x77, 0xd0,
+	0x2e, 0x84, 0x94, 0xc4, 0xf1, 0x49, 0x0e, 0x14, 0xb0, 0x18, 0x13, 0x55, 0x1a, 0xc8, 0xd5, 0x40,
+	0x85, 0x90, 0x92, 0x40, 0x2e, 0xa1, 0xd7, 0x60, 0xed, 0x80, 0xe2, 0x13, 0x7a, 0x03, 0xad, 0xdd,
+	0x31, 0x7c, 0x32, 0x7c, 0x02, 0x67, 0x26, 0xb8, 0x37, 0x17, 0x53, 0x11, 0x33, 0x94, 0x29, 0x8b,
+	0x14, 0x66, 0x1e, 0x8f, 0x67, 0x52, 0xcc, 0x65, 0x3a, 0x33, 0xbb, 0xc3, 0xe6, 0x43, 0x6e, 0x8c,
+	0xc2, 0x71, 0x30, 0xce, 0xf5, 0x98, 0x7c, 0x55, 0xfe, 0xb1, 0x36, 0xad, 0xeb, 0x72, 0xfe, 0x13,
+	0x00, 0x00, 0xff, 0xff, 0x8b, 0x30, 0x8b, 0x84, 0xa4, 0x03, 0x00, 0x00,
 }

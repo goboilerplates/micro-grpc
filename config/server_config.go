@@ -7,7 +7,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-// RegisterServiceServers .
+// RegisterServiceServers register all service servers.
 func RegisterServiceServers(server *grpc.Server) {
 	proto.RegisterGetSamplesServer(server, &api.GetSamplesAPI{
 		Interactor: core.CreateDefaultGetSamples(),
